@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
+  <th:block th:fragment="content">
+    <h1 class="mt-4">GuestBook List Page
+      <span>
+      <a th:href="@{register}">
+        <button type="button" class="btn btn-outline-primary">REGISTER</button>
+      </a>
+    </span>
+    </h1>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Gno</th>
+          <th scope="col">Title</th>
+          <th scope="col">Regdate</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr th:each="dto : ${result.dtoList}">
+        <th scope="row"><a th:href="@{read(page=${result.page},gno=${dto.gno})}">[[${dto.gno}]]</a></th>
+        <td>[[${dto.title}]]</td>
+        <td>[[${dto.writer}]]</td>
+        <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
+      </tr>
+      </tbody>
+    </table>
+    <ul class="pagination h-100 justify-content-center align-items-center">
+      <li class="page-item" th:if="${result.prev}">
+        <a th:href="@{list(page=${result.start-1})}" class="page-link" tabindex="-1">PREV</a>
+      </li>
+      <li th:class="'page-item ' + ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
+        <a class="page-link" th:href="@{list(page=${page})}">[[${page}]]</a>
+      </li>
+      <li class="page-item" th:if="${result.next}">
+        <a class="page-link" th:href="@{list(page=${result.end +1})}">NEXT</a>
+      </li>
+    </ul>
+
+<!--msg modal    -->
+    <div class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script th:inline="javascript">
+      let msg = [[${msg}]];
+      //console.log(msg);
+      if(msg){
+        $(".modal").modal();
+      }
+    </script>
+  </th:block>
+</th:block>
