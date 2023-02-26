@@ -5,6 +5,9 @@
     <h1 class="mt-4">GuestBook Modify Page</h1>
 
     <form action="modify" method="post">
+      <input type="hidden" name="page" th:value="${requestDTO.page}">
+      <input type="hidden" name="type" th:value="${requestDTO.type}">
+      <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
     <div class="form-group">
       <label>Gno</label>
       <input type="text" name="gno" class="form-control" th:value="${dto.gno}" readonly>
@@ -41,9 +44,39 @@
       $(".removeBtn").click(function (){
         //alert("removeBtn click");
         //alert("removeBtn click");
+        if(!confirm("삭제 하시겠습니까?")){
+          return;
+        }
         actionForm
                 .attr("action","remove")
                 .attr("method","post");
+        actionForm.submit();
+      }); // removeBtn click --- end
+      $(".modifyBtn").click(function (){
+        //alert("modifyBtn click");
+        if(!confirm("수정하시겠습니까?")){
+          return;
+        }
+        actionForm
+                .attr("action","modify")
+                .attr("method","post")
+                .submit();
+      }); //modifyBtn click --- end
+
+      $(".listBtn").click(function (){
+        //let pageInfo = $("input[name='page']");
+        let page = $("input[name='page']");
+        let type = $("input[name='type']");
+        let keyword = $("input[name='keyword']");
+        actionForm.empty(); //form태그의 모든 내용을 지우고
+
+        actionForm.append(page); //목록 페이지 이동에 필요한 내용을 다시 추가
+        actionForm.append(type);
+        actionForm.append(keyword);
+        actionForm
+                .attr("action","list")
+                .attr("method","get");
+        //console.log(actionForm.html()); //확인 후 주석처리
         actionForm.submit();
       })
     </script>
